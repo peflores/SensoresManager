@@ -32,14 +32,15 @@
 
                 <LinearLayout
                     android:id="@+id/ejemplo1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
 
                     <RelativeLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:id="@+id/layoutPestania1">
 
                         <LinearLayout
                             android:orientation="horizontal"
@@ -158,9 +159,173 @@
                 <LinearLayout
                     android:id="@+id/ejemplo2"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="vertical">
 
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:id="@+id/layoutPestania2">
+
+                                                <LinearLayout
+                                                    android:orientation="horizontal"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:weightSum="1"
+                                                    android:id="@+id/linearLayoutElectricida"
+                                                    android:layout_alignParentTop="true"
+                                                    android:layout_alignParentStart="true">
+
+                                                    <TextView
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/electricidad"
+                                                        android:id="@+id/lblElectricidad"
+                                                        android:textSize="15sp"
+                                                        android:allowUndo="false"
+                                                        android:textIsSelectable="true" />
+
+                                                    <EditText
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/txtVElectricidad"
+                                                        android:inputType="text"
+                                                        android:maxLength="15"
+                                                        android:maxLines="15"
+                                                        android:maxWidth="15sp"
+                                                        android:nestedScrollingEnabled="false"
+                                                        android:singleLine="true"
+                                                        android:scrollIndicators="none"
+                                                        android:textStyle="bold"
+                                                        android:textSize="25sp"
+                                                        android:text="SI"
+                                                        android:textAlignment="center"
+                                                        android:textColor="#a80202" />
+
+                                                </LinearLayout>
+
+                                                <LinearLayout
+                                                    android:orientation="horizontal"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:weightSum="1"
+                                                    android:id="@+id/linearLayoutTemperatura"
+                                                    android:layout_below="@+id/linearLayoutHumo"
+                                                    android:layout_alignParentStart="true">
+
+                                                    <TextView
+                                                        android:layout_width="170dp"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/temperatura"
+                                                        android:id="@+id/lblTeperatura"
+                                                        android:textSize="15sp"
+                                                        android:allowUndo="false"
+                                                        android:textIsSelectable="true" />
+
+                                                    <EditText
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/txtTemperatura"
+                                                        android:inputType="text"
+                                                        android:maxLength="15"
+                                                        android:maxLines="15"
+                                                        android:maxWidth="15dp"
+                                                        android:nestedScrollingEnabled="false"
+                                                        android:singleLine="true"
+                                                        android:scrollIndicators="none"
+                                                        android:textStyle="bold"
+                                                        android:textSize="25sp"
+                                                        android:text="SI"
+                                                        android:textAlignment="center" />
+                                                </LinearLayout>
+
+                                                <LinearLayout
+                                                    android:orientation="horizontal"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:weightSum="1"
+                                                    android:id="@+id/linearLayoutHumedad"
+                                                    android:layout_below="@+id/linearLayoutTemperatura"
+                                                    android:layout_alignParentStart="true">
+
+                                                    <TextView
+                                                        android:layout_width="170dp"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/humedad"
+                                                        android:id="@+id/textView"
+                                                        android:textSize="15sp"
+                                                        android:allowUndo="false"
+                                                        android:textIsSelectable="true" />
+
+                                                    <EditText
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/editText"
+                                                        android:inputType="text"
+                                                        android:maxLength="15"
+                                                        android:maxLines="15"
+                                                        android:maxWidth="15dp"
+                                                        android:nestedScrollingEnabled="false"
+                                                        android:singleLine="true"
+                                                        android:scrollIndicators="none"
+                                                        android:textStyle="bold"
+                                                        android:textSize="25sp"
+                                                        android:text="SI"
+                                                        android:textAlignment="center" />
+                                                </LinearLayout>
+
+                                                <LinearLayout
+                                                    android:orientation="horizontal"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:weightSum="1"
+                                                    android:id="@+id/linearLayoutHumo"
+                                                    android:layout_below="@+id/linearLayoutElectricida"
+                                                    android:layout_alignParentStart="true">
+
+                                                    <TextView
+                                                        android:layout_width="170dp"
+                                                        android:layout_height="wrap_content"
+                                                        android:text="@string/pesenciaDeHumo"
+                                                        android:id="@+id/textView2"
+                                                        android:textSize="15sp"
+                                                        android:allowUndo="false"
+                                                        android:textIsSelectable="true" />
+
+                                                    <EditText
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/editText2"
+                                                        android:inputType="text"
+                                                        android:maxLength="15"
+                                                        android:maxLines="15"
+                                                        android:maxWidth="15dp"
+                                                        android:nestedScrollingEnabled="false"
+                                                        android:singleLine="true"
+                                                        android:scrollIndicators="none"
+                                                        android:textStyle="bold"
+                                                        android:textSize="25sp"
+                                                        android:text="SI"
+                                                        android:textAlignment="center" />
+                                                </LinearLayout>
+
+                                                <LinearLayout
+                                                    android:orientation="horizontal"
+                                                    android:layout_width="match_parent"
+                                                    android:layout_height="wrap_content"
+                                                    android:weightSum="1"
+                                                    android:id="@+id/linearLayoutVentilacion"
+                                                    android:layout_below="@+id/linearLayoutHumedad"
+                                                    android:layout_alignParentStart="true">
+
+                                                    <Switch
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content"
+                                                        android:id="@+id/interruptorVentilado"
+                                                        android:text="@string/ventilacion" />
+                                                </LinearLayout>
+
+                    </RelativeLayout>
 
 
                 </LinearLayout>

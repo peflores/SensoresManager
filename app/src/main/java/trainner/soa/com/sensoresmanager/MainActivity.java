@@ -22,20 +22,18 @@ public class MainActivity extends AppCompatActivity {
 
     private Boolean presionado = Boolean.FALSE;
 
-    public MainActivity() {
-        empezar = (Button) findViewById(R.id.btnEmpezar);
-
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        empezar = (Button) findViewById(R.id.btnEmpezar);
+        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //toolbar.setTitle("");
+        //setSupportActionBar(toolbar);
+
         crearTabs();
-        empezar.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.my_button, null));
+
         empezar.setOnClickListener(getListerner());
 
 
@@ -83,10 +81,12 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+        */
+        return false;
     }
 }

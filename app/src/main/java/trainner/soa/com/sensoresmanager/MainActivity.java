@@ -13,14 +13,14 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private TabHost TbH;
-
     private Button empezar;
-
     private Boolean presionado = Boolean.FALSE;
+    private TextView txtEstado;
 
 
     @Override
@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         empezar = (Button) findViewById(R.id.btnEmpezar);
+        txtEstado = (TextView) findViewById(R.id.txtEstado);
         //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         //toolbar.setTitle("");
         //setSupportActionBar(toolbar);
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                txtEstado.setText("estado");
             }
         };
     }

@@ -127,7 +127,7 @@
                                 android:text="Empezar"
                                 android:id="@+id/btnEmpezar"
                                 android:layout_weight="0.41"
-                                style="@android:style/Holo.SegmentedButton" />
+                                android:background="@drawable/my_button"/>
                         </LinearLayout>
 
                         <LinearLayout

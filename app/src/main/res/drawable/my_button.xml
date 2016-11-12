@@ -2,8 +2,9 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true"
-        android:drawable="@color/colorPrimary" />
+        android:drawable="@color/colorPresionado"/>
+
     <item
         android:state_pressed="false"
-        android:drawable="@android:style/Holo.SegmentedButton" />
+        android:drawable="@color/colorNoPresionado" />
 </selector>

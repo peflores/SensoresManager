@@ -3,5 +3,11 @@
     <string name="action_settings">Settings</string>
     <string name="txtIp">Dir. IP.: </string>
     <string name="txtPuerto">Puerto:</string>
-
+    <string name="temperatura">Temperatura:</string>
+    <string name="pesenciaDeHumo">Presencia de Humo:</string>
+    <string name="ventilacion">Ventilacion:</string>
+    <string name="electricidad">Presencia de Electricidad:</string>
+    <string name="humedad">Humedad:</string>
 </resources>
+
+

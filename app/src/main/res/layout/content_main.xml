@@ -115,11 +115,12 @@
                             android:orientation="horizontal"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="62dp"
+                            android:weightSum="1"
+                            android:id="@+id/layoutEmpezar"
                             android:layout_below="@+id/linearLayout"
                             android:layout_alignParentStart="true"
-                            android:layout_marginTop="127dp"
-                            android:gravity="center"
-                            android:weightSum="1">
+                            android:layout_alignParentEnd="true">
 
                             <Button
                                 android:layout_centerHorizontal="true"
@@ -127,9 +128,19 @@
                                 android:layout_height="wrap_content"
                                 android:text="Empezar"
                                 android:id="@+id/btnEmpezar"
-                                android:layout_weight="0.41"
+                                android:layout_weight="0.50"
+                                android:background="@drawable/my_button"/>
+
+                            <Button
+                                android:layout_centerHorizontal="true"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Detener"
+                                android:id="@+id/btnDetener"
+                                android:layout_weight="0.50"
                                 android:background="@drawable/my_button"/>
                         </LinearLayout>
+
 
                         <LinearLayout
                             android:orientation="horizontal"
@@ -167,13 +178,36 @@
                         android:layout_height="match_parent"
                         android:id="@+id/layoutPestania2">
 
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:weightSum="1"
+                            android:id="@+id/linearLayoutStatus"
+                            android:layout_above="@+id/linearLayoutElectricida"
+                            android:layout_alignParentStart="true"
+                            android:layout_alignParentTop="true">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/lblSigoConectado"
+                                android:textSize="15sp"
+                                android:allowUndo="false"
+                                android:textIsSelectable="true"
+                                android:layout_weight="0.57"
+                                android:textAlignment="center"
+                                android:gravity="center_vertical"
+                                android:textColor="#7dab13" />
+
+                        </LinearLayout>
                                                 <LinearLayout
                                                     android:orientation="horizontal"
                                                     android:layout_width="match_parent"
                                                     android:layout_height="wrap_content"
                                                     android:weightSum="1"
                                                     android:id="@+id/linearLayoutElectricida"
-                                                    android:layout_alignParentTop="true"
+                                                    android:layout_above="@+id/linearLayoutHumo"
                                                     android:layout_alignParentStart="true">
 
                                                     <TextView
@@ -210,7 +244,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:weightSum="1"
                                                     android:id="@+id/linearLayoutTemperatura"
-                                                    android:layout_below="@+id/linearLayoutHumo"
+                                                    android:layout_above="@+id/linearLayoutHumedad"
                                                     android:layout_alignParentStart="true">
 
                                                     <TextView
@@ -245,7 +279,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:weightSum="1"
                                                     android:id="@+id/linearLayoutHumedad"
-                                                    android:layout_below="@+id/linearLayoutTemperatura"
+                                                    android:layout_centerVertical="true"
                                                     android:layout_alignParentStart="true">
 
                                                     <TextView
@@ -280,7 +314,7 @@
                                                     android:layout_height="wrap_content"
                                                     android:weightSum="1"
                                                     android:id="@+id/linearLayoutHumo"
-                                                    android:layout_below="@+id/linearLayoutElectricida"
+                                                    android:layout_above="@+id/linearLayoutTemperatura"
                                                     android:layout_alignParentStart="true">
 
                                                     <TextView
@@ -318,12 +352,15 @@
                                                     android:layout_below="@+id/linearLayoutHumedad"
                                                     android:layout_alignParentStart="true">
 
-                                                    <Switch
-                                                        android:layout_width="match_parent"
-                                                        android:layout_height="wrap_content"
-                                                        android:id="@+id/interruptorVentilado"
-                                                        android:text="@string/ventilacion" />
                                                 </LinearLayout>
+
+                        <Switch
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/interruptorVentilado"
+                            android:text="@string/ventilacion"
+                            android:layout_below="@+id/linearLayoutVentilacion"
+                            android:layout_alignParentStart="true" />
 
                     </RelativeLayout>
 

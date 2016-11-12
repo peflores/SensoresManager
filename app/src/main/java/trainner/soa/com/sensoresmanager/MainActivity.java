@@ -1,43 +1,83 @@
 package trainner.soa.com.sensoresmanager;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TabHost;
 import android.widget.TextView;
+
+import trainner.soa.com.sensoresmanager.broacast.BroadCastRecepcion;
+import trainner.soa.com.sensoresmanager.service.ServicioConsulta;
 
 public class MainActivity extends AppCompatActivity {
 
     private TabHost TbH;
     private Button empezar;
+    private Button detener;
     private Boolean presionado = Boolean.FALSE;
     private TextView txtEstado;
+    private Intent servicio;
+    private EditText txtDirIp;
+    private EditText txtPuerto;
+    private String HOST = "HOST";
+    private String PUERTO = "PUERTO";
+    private TextView lblSigoConectado;
 
+    public TextView getLblSigoConectado() {
+        return lblSigoConectado;
+    }
+
+    public void setLblSigoConectado(TextView lblSigoConectado) {
+        this.lblSigoConectado = lblSigoConectado;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        inicializarComponentes();
+        crearTabs();
+    }
+    private void inicializarComponentes() {
         empezar = (Button) findViewById(R.id.btnEmpezar);
         txtEstado = (TextView) findViewById(R.id.txtEstado);
-        //Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        //toolbar.setTitle("");
-        //setSupportActionBar(toolbar);
-
-        crearTabs();
-
+        txtDirIp = (EditText) findViewById(R.id.txtDirIp);
+        txtPuerto = (EditText) findViewById(R.id.txtPuerto);
         empezar.setOnClickListener(getListerner());
+        servicio = new Intent(this, ServicioConsulta.class);
+        lblSigoConectado = (TextView) findViewById(R.id.lblSigoConectado);
+        detener = (Button) findViewById(R.id.btnDetener);
+        detener.setOnClickListener(getListenerDetener());
+        regsitrarFiltros();
+    }
 
+    private void regsitrarFiltros() {
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(ServicioConsulta.ACTION_DESCONECTADO);
+        filter.addAction(ServicioConsulta.ACTION_CONECTADO);
+        filter.addAction(ServicioConsulta.ACTION_DETENIDO);
+        BroadCastRecepcion recepcion = new BroadCastRecepcion(this);
+        registerReceiver(recepcion, filter);
+    }
 
+    @NonNull
+    private View.OnClickListener getListenerDetener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                stopService(servicio);
+            }
+        };
     }
 
     @NonNull
@@ -45,10 +85,20 @@ public class MainActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(isCamposValidos()){
+                    servicio.putExtra(HOST,txtDirIp.getText().toString());
+                    servicio.putExtra(PUERTO, txtPuerto.getText().toString());
+                    startService(servicio);
 
-                txtEstado.setText("estado");
+                }
+
             }
         };
+    }
+
+    private boolean isCamposValidos() {
+        return txtDirIp.getText().toString().trim().length() > 0 &&
+                txtPuerto.getText().toString().trim().length() > 0;
     }
 
     private void crearTabs() {
@@ -90,5 +140,76 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
         */
         return false;
+    }
+    public TabHost getTbH() {
+        return TbH;
+    }
+
+    public void setTbH(TabHost tbH) {
+        TbH = tbH;
+    }
+
+    public Button getEmpezar() {
+        return empezar;
+    }
+
+    public void setEmpezar(Button empezar) {
+        this.empezar = empezar;
+    }
+
+    public Boolean getPresionado() {
+        return presionado;
+    }
+
+    public void setPresionado(Boolean presionado) {
+        this.presionado = presionado;
+    }
+
+    public TextView getTxtEstado() {
+        return txtEstado;
+    }
+
+    public void setTxtEstado(TextView txtEstado) {
+        this.txtEstado = txtEstado;
+    }
+
+    public Intent getServicio() {
+        return servicio;
+    }
+
+    public void setServicio(Intent servicio) {
+        this.servicio = servicio;
+    }
+
+    public EditText getTxtDirIp() {
+        return txtDirIp;
+    }
+
+    public void setTxtDirIp(EditText txtDirIp) {
+        this.txtDirIp = txtDirIp;
+    }
+
+    public EditText getTxtPuerto() {
+        return txtPuerto;
+    }
+
+    public void setTxtPuerto(EditText txtPuerto) {
+        this.txtPuerto = txtPuerto;
+    }
+
+    public String getHOST() {
+        return HOST;
+    }
+
+    public void setHOST(String HOST) {
+        this.HOST = HOST;
+    }
+
+    public String getPUERTO() {
+        return PUERTO;
+    }
+
+    public void setPUERTO(String PUERTO) {
+        this.PUERTO = PUERTO;
     }
 }

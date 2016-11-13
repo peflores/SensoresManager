@@ -232,7 +232,6 @@
                                                         android:scrollIndicators="none"
                                                         android:textStyle="bold"
                                                         android:textSize="25sp"
-                                                        android:text="SI"
                                                         android:textAlignment="center"
                                                         android:textColor="#a80202" />
 
@@ -269,7 +268,6 @@
                                                         android:scrollIndicators="none"
                                                         android:textStyle="bold"
                                                         android:textSize="25sp"
-                                                        android:text="SI"
                                                         android:textAlignment="center" />
                                                 </LinearLayout>
 
@@ -304,7 +302,6 @@
                                                         android:scrollIndicators="none"
                                                         android:textStyle="bold"
                                                         android:textSize="25sp"
-                                                        android:text="SI"
                                                         android:textAlignment="center" />
                                                 </LinearLayout>
 
@@ -339,7 +336,6 @@
                                                         android:scrollIndicators="none"
                                                         android:textStyle="bold"
                                                         android:textSize="25sp"
-                                                        android:text="SI"
                                                         android:textAlignment="center" />
                                                 </LinearLayout>
 

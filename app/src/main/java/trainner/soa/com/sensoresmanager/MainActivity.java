@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
 
@@ -31,6 +32,11 @@ public class MainActivity extends AppCompatActivity {
     private String HOST = "HOST";
     private String PUERTO = "PUERTO";
     private TextView lblSigoConectado;
+    private Switch ventilador;
+    private EditText txtHumedad;
+    private EditText txtHumo;
+    private EditText txtTemperatura;
+    private EditText txtCorte;
 
     public TextView getLblSigoConectado() {
         return lblSigoConectado;
@@ -51,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
         empezar = (Button) findViewById(R.id.btnEmpezar);
         txtEstado = (TextView) findViewById(R.id.txtEstado);
         txtDirIp = (EditText) findViewById(R.id.txtDirIp);
+        txtTemperatura = (EditText) findViewById(R.id.txtTemperatura);
+        txtHumedad = (EditText) findViewById(R.id.txtHumedad);
+        txtHumo = (EditText) findViewById(R.id.txtHumo);
+        ventilador = (Switch) findViewById(R.id.interruptorVentilado);
+        txtCorte = (EditText) findViewById(R.id.txtVElectricidad);
         txtPuerto = (EditText) findViewById(R.id.txtPuerto);
         empezar.setOnClickListener(getListerner());
         servicio = new Intent(this, ServicioConsulta.class);
@@ -211,5 +222,53 @@ public class MainActivity extends AppCompatActivity {
 
     public void setPUERTO(String PUERTO) {
         this.PUERTO = PUERTO;
+    }
+
+    public Button getDetener() {
+        return detener;
+    }
+
+    public void setDetener(Button detener) {
+        this.detener = detener;
+    }
+
+    public Switch getVentilador() {
+        return ventilador;
+    }
+
+    public void setVentilador(Switch ventilador) {
+        this.ventilador = ventilador;
+    }
+
+    public EditText getTxtHumedad() {
+        return txtHumedad;
+    }
+
+    public void setTxtHumedad(EditText txtHumedad) {
+        this.txtHumedad = txtHumedad;
+    }
+
+    public EditText getTxtHumo() {
+        return txtHumo;
+    }
+
+    public void setTxtHumo(EditText txtHumo) {
+        this.txtHumo = txtHumo;
+    }
+
+    public EditText getTxtTemperatura() {
+        return txtTemperatura;
+    }
+
+    public void setTxtTemperatura(EditText txtTemperatura) {
+        this.txtTemperatura = txtTemperatura;
+    }
+
+    public EditText getTxtCorte() {
+        return txtCorte;
+    }
+
+    public void setTxtCorte(EditText txtCorte) {
+        this.txtCorte = txtCorte;
     }
 }

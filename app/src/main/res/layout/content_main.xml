@@ -294,7 +294,7 @@
                                                     <EditText
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
-                                                        android:id="@+id/editText"
+                                                        android:id="@+id/txtHumedad"
                                                         android:inputType="text"
                                                         android:maxLength="15"
                                                         android:maxLines="15"
@@ -329,7 +329,7 @@
                                                     <EditText
                                                         android:layout_width="match_parent"
                                                         android:layout_height="wrap_content"
-                                                        android:id="@+id/editText2"
+                                                        android:id="@+id/txtHumo"
                                                         android:inputType="text"
                                                         android:maxLength="15"
                                                         android:maxLines="15"

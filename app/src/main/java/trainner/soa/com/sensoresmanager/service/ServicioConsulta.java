@@ -29,6 +29,11 @@ public class ServicioConsulta extends Service {
     public static final String ACTION_CONECTADO = "trainner.soa.com.sensoresmanager.service.action.CONECTADO";
     public static final String ACTION_DESCONECTADO = "trainner.soa.com.sensoresmanager.service.action.DESCONECTADO";
     public static final String ACTION_DETENIDO = "trainner.soa.com.sensoresmanager.service.action.DETENIDO";
+    public static final String TEMPERATURA = "TEMPERATURA";
+    public static final String HUMEDAD = "HUMEDAD";
+    public static final String CORTE = "CORTE";
+    public static final String HUMO = "HUMO";
+    public static final String VENTILADOR = "VENTILADOR";
 
     private Thread hilo;
     private Boolean continuar = Boolean.TRUE;
@@ -53,13 +58,14 @@ public class ServicioConsulta extends Service {
 
             try {
                 hilo.join();
-                Intent brcEstado = new Intent();
-                brcEstado.setAction(ACTION_DETENIDO);
-                sendBroadcast(brcEstado);
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
+        Intent brcEstado = new Intent();
+        brcEstado.setAction(ACTION_DETENIDO);
+        sendBroadcast(brcEstado);
         hacerTiempo();
         super.onDestroy();
     }
@@ -108,6 +114,13 @@ public class ServicioConsulta extends Service {
                     //envio de broadCast para avisar que esta conectado.
                     Intent brcEstado = new Intent();
                     brcEstado.setAction(ACTION_CONECTADO);
+
+                    String humedad = arduino.getHumedad() != null? arduino.getHumedad().concat("°"):"";
+                    brcEstado.putExtra(HUMO, arduino.getHumo());
+                    brcEstado.putExtra(HUMEDAD,humedad);
+                    brcEstado.putExtra(CORTE,arduino.getCorte());
+                    brcEstado.putExtra(VENTILADOR,arduino.getVentilador());
+                    brcEstado.putExtra(TEMPERATURA,arduino.getTemp());
                     sendBroadcast(brcEstado);
                 }else {
                     sendAvisoDesconexion();
@@ -140,3 +153,4 @@ public class ServicioConsulta extends Service {
         }
     }
 }
+

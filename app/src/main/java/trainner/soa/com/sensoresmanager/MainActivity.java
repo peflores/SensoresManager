@@ -11,10 +11,15 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import trainner.soa.com.sensoresmanager.broacast.BroadCastRecepcion;
 import trainner.soa.com.sensoresmanager.service.ServicioConsulta;
@@ -24,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private TabHost TbH;
     private Button empezar;
     private Button detener;
+    private Button scanQR;
     private Boolean presionado = Boolean.FALSE;
     private TextView txtEstado;
     private Intent servicio;
@@ -55,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private void inicializarComponentes() {
         empezar = (Button) findViewById(R.id.btnEmpezar);
+        scanQR = (Button) findViewById(R.id.btnScanQR);
         txtEstado = (TextView) findViewById(R.id.txtEstado);
         txtDirIp = (EditText) findViewById(R.id.txtDirIp);
         txtTemperatura = (EditText) findViewById(R.id.txtTemperatura);
@@ -68,7 +75,71 @@ public class MainActivity extends AppCompatActivity {
         lblSigoConectado = (TextView) findViewById(R.id.lblSigoConectado);
         detener = (Button) findViewById(R.id.btnDetener);
         detener.setOnClickListener(getListenerDetener());
+        final IntentIntegrator scan = new IntentIntegrator(this);
+        scanQR.setOnClickListener(getListeneScanQR(scan));
+        ventilador.setOnCheckedChangeListener(getListenerCheckedChanged());
         regsitrarFiltros();
+    }
+
+    @NonNull
+    private CompoundButton.OnCheckedChangeListener getListenerCheckedChanged() {
+        return new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+            }
+        };
+    }
+
+    @NonNull
+    private View.OnClickListener getListeneScanQR(final IntentIntegrator scan) {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scan.initiateScan();
+            }
+        };
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        //Se obtiene el resultado del proceso de scaneo y se parsea
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanningResult != null) {
+            //Quiere decir que se obtuvo resultado pro lo tanto:
+            //Desplegamos en pantalla el contenido del código de barra scaneado
+            String scanContent = scanningResult.getContents();
+
+            if(isValido(scanContent)){
+
+                scanContent = scanContent.substring(1, scanContent.length()-1);
+                String[] split = scanContent.split(":");
+
+                if("ip".equalsIgnoreCase(split[0]) &&
+                        "port".equalsIgnoreCase(split[1].split(",")[1])) {
+
+                    String host = split[1].split(",")[0];
+                    String puerto = split[2];
+                    txtPuerto.setText(puerto);
+                    txtDirIp.setText(host);
+
+                }
+
+            }
+        }else{
+
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Valores no reconocidos", Toast.LENGTH_SHORT);
+            toast.show();
+        }
+    }
+
+    private boolean isValido(String scanContent) {
+        return scanContent.startsWith("{") &&
+                scanContent.split(":").length == 3 &&
+                scanContent.contains("ip")&&
+                scanContent.contains(",")&&
+                scanContent.contains("port") &&
+                scanContent.endsWith("}");
     }
 
     private void regsitrarFiltros() {

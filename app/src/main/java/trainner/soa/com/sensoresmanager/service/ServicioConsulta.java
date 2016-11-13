@@ -114,10 +114,8 @@ public class ServicioConsulta extends Service {
                     //envio de broadCast para avisar que esta conectado.
                     Intent brcEstado = new Intent();
                     brcEstado.setAction(ACTION_CONECTADO);
-
-                    String humedad = arduino.getHumedad() != null? arduino.getHumedad().concat("°"):"";
                     brcEstado.putExtra(HUMO, arduino.getHumo());
-                    brcEstado.putExtra(HUMEDAD,humedad);
+                    brcEstado.putExtra(HUMEDAD, arduino.getHumedad());
                     brcEstado.putExtra(CORTE,arduino.getCorte());
                     brcEstado.putExtra(VENTILADOR,arduino.getVentilador());
                     brcEstado.putExtra(TEMPERATURA,arduino.getTemp());

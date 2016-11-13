@@ -8,6 +8,7 @@
     <string name="ventilacion">Ventilacion:</string>
     <string name="electricidad">Presencia de Electricidad:</string>
     <string name="humedad">Humedad:</string>
+    <string name="scanQR">ScanQR</string>
 </resources>
 
 

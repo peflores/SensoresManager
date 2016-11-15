@@ -33,7 +33,10 @@
         <service
             android:name=".service.ServicioConsulta"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+        <service
+            android:name=".broacast.ServicioVentilador"
+            android:exported="false"></service>
     </application>
 
 </manifest>

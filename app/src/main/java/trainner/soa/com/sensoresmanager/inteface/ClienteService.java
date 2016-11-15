@@ -12,7 +12,7 @@ public interface ClienteService {
 
     @GET("test")
     Call<Arduino> getEstado();
-    @GET("test")
+    @GET("rele")
     Call<Arduino> setRele(@Query("RELE") String rele);
 
 }

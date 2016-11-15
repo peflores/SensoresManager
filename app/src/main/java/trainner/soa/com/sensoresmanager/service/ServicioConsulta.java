@@ -34,7 +34,6 @@ public class ServicioConsulta extends Service {
     public static final String CORTE = "CORTE";
     public static final String HUMO = "HUMO";
     public static final String VENTILADOR = "VENTILADOR";
-
     private Thread hilo;
     private Boolean continuar = Boolean.TRUE;
     private StringBuilder url;
@@ -42,7 +41,7 @@ public class ServicioConsulta extends Service {
     private String HOST = "HOST";
     private String PUERTO = "PUERTO";
     private String HTTP = "http://";
-    String DOSPUNTOS = ":";
+    private String DOSPUNTOS = ":";
 
     public ServicioConsulta() {
 
@@ -87,18 +86,21 @@ public class ServicioConsulta extends Service {
         return new Runnable() {
             @Override
             public void run() {
-                String hos = intent.getStringExtra(HOST);
-                String puerto = intent.getStringExtra(PUERTO);
-                url.append(hos).append(DOSPUNTOS).append(puerto).append("/SoaRest/");
-                srvArduino = new Retrofit.Builder().baseUrl(url.toString())
-                        .addConverterFactory(GsonConverterFactory.create() ).build();
-                ClienteService servicio =   srvArduino.create(ClienteService.class);
-                do {
-                    Call<Arduino> estadoCallBack = servicio.getEstado();
-                    estadoCallBack.enqueue(getCallBack());
-                    hacerTiempo();
+                if(intent != null){
+                    String hos = intent.getStringExtra(HOST);
+                    String puerto = intent.getStringExtra(PUERTO);
+                    url.append(hos).append(DOSPUNTOS).append(puerto).append("/SoaRest/");
+                    srvArduino = new Retrofit.Builder().baseUrl(url.toString())
+                            .addConverterFactory(GsonConverterFactory.create() ).build();
+                    ClienteService servicio =   srvArduino.create(ClienteService.class);
+                    do {
+                        Call<Arduino> estadoCallBack = servicio.getEstado();
+                        estadoCallBack.enqueue(getCallBack());
+                        hacerTiempo();
 
-                }while(continuar);
+                    }while(continuar);
+                }
+
             }
         };
     }
@@ -116,7 +118,7 @@ public class ServicioConsulta extends Service {
                     brcEstado.setAction(ACTION_CONECTADO);
                     brcEstado.putExtra(HUMO, arduino.getHumo());
                     brcEstado.putExtra(HUMEDAD, arduino.getHumedad());
-                    brcEstado.putExtra(CORTE,arduino.getCorte());
+                    brcEstado.putExtra(CORTE,arduino.getEnergia());
                     brcEstado.putExtra(VENTILADOR,arduino.getVentilador());
                     brcEstado.putExtra(TEMPERATURA,arduino.getTemp());
                     sendBroadcast(brcEstado);
@@ -145,7 +147,7 @@ public class ServicioConsulta extends Service {
 
     private void hacerTiempo(){
         try {
-            Thread.sleep(500);
+            Thread.sleep(900);
         }catch (InterruptedException e){
 
         }

@@ -38,6 +38,7 @@ public class BroadCastRecepcion extends BroadcastReceiver {
     }
 
     private void notificarConectado(Intent intent) {
+
         mainActivity.getTxtEstado().setText(CONECTADO);
         mainActivity.getLblSigoConectado().setText(CONECTADO);
         String ventilador = intent.getStringExtra(ServicioConsulta.VENTILADOR);
@@ -45,6 +46,7 @@ public class BroadCastRecepcion extends BroadcastReceiver {
         String humo = intent.getStringExtra(ServicioConsulta.HUMO);
         String corte = intent.getStringExtra(ServicioConsulta.CORTE);
         String temperatura = intent.getStringExtra(ServicioConsulta.TEMPERATURA);
+        mainActivity.getVentilador().setEnabled(Boolean.TRUE);
         if("SI".equals(ventilador)){
             mainActivity.getVentilador().setChecked(Boolean.TRUE);
         }else if("NO".equals(ventilador)){
@@ -66,13 +68,13 @@ public class BroadCastRecepcion extends BroadcastReceiver {
         clearCampo();
     }
     private void notificarDetenido(Intent intent) {
-
         mainActivity.getTxtEstado().setText(DETENIDO);
         mainActivity.getLblSigoConectado().setText(DETENIDO);
         clearCampo();
     }
 
     private void clearCampo() {
+        mainActivity.getVentilador().setEnabled(Boolean.FALSE);
         mainActivity.getVentilador().setChecked(Boolean.FALSE);
         mainActivity.getTxtHumedad().setText("");
         mainActivity.getTxtTemperatura().setText("");

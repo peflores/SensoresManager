@@ -10,8 +10,8 @@ public class Arduino {
     @SerializedName("temp")
     private String temp;
 
-    @SerializedName("corte")
-    private String corte;
+    @SerializedName("energia")
+    private String energia;
 
     @SerializedName("humedad")
     private String humedad;
@@ -28,14 +28,6 @@ public class Arduino {
 
     public void setTemp(String temp) {
         this.temp = temp;
-    }
-
-    public String getCorte() {
-        return corte;
-    }
-
-    public void setCorte(String corte) {
-        this.corte = corte;
     }
 
     public String getHumedad() {
@@ -58,7 +50,16 @@ public class Arduino {
         return humo;
     }
 
+    public String getEnergia() {
+        return energia;
+    }
+
+    public void setEnergia(String energia) {
+        this.energia = energia;
+    }
+
     public void setHumo(String humo) {
         this.humo = humo;
     }
+
 }

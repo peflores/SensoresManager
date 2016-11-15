@@ -1,5 +1,8 @@
 package trainner.soa.com.sensoresmanager;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
@@ -21,10 +24,21 @@ import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import java.io.IOException;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import trainner.soa.com.sensoresmanager.broacast.BroadCastRecepcion;
+import trainner.soa.com.sensoresmanager.broacast.ServicioVentilador;
+import trainner.soa.com.sensoresmanager.entidad.Arduino;
+import trainner.soa.com.sensoresmanager.inteface.ClienteService;
 import trainner.soa.com.sensoresmanager.service.ServicioConsulta;
 
 public class MainActivity extends AppCompatActivity {
+
 
     private TabHost TbH;
     private Button empezar;
@@ -33,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private Boolean presionado = Boolean.FALSE;
     private TextView txtEstado;
     private Intent servicio;
+    private Intent servicioRele;
     private EditText txtDirIp;
     private EditText txtPuerto;
     private String HOST = "HOST";
@@ -43,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtHumo;
     private EditText txtTemperatura;
     private EditText txtCorte;
+
 
     public TextView getLblSigoConectado() {
         return lblSigoConectado;
@@ -60,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         crearTabs();
     }
     private void inicializarComponentes() {
+
         empezar = (Button) findViewById(R.id.btnEmpezar);
         scanQR = (Button) findViewById(R.id.btnScanQR);
         txtEstado = (TextView) findViewById(R.id.txtEstado);
@@ -68,10 +85,12 @@ public class MainActivity extends AppCompatActivity {
         txtHumedad = (EditText) findViewById(R.id.txtHumedad);
         txtHumo = (EditText) findViewById(R.id.txtHumo);
         ventilador = (Switch) findViewById(R.id.interruptorVentilado);
+        ventilador.setEnabled(Boolean.FALSE);
         txtCorte = (EditText) findViewById(R.id.txtVElectricidad);
         txtPuerto = (EditText) findViewById(R.id.txtPuerto);
         empezar.setOnClickListener(getListerner());
         servicio = new Intent(this, ServicioConsulta.class);
+        servicioRele = new Intent(this,ServicioVentilador.class);
         lblSigoConectado = (TextView) findViewById(R.id.lblSigoConectado);
         detener = (Button) findViewById(R.id.btnDetener);
         detener.setOnClickListener(getListenerDetener());
@@ -86,8 +105,18 @@ public class MainActivity extends AppCompatActivity {
         return new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                servicioRele.putExtra(HOST,txtDirIp.getText().toString());
+                servicioRele.putExtra(PUERTO, txtPuerto.getText().toString());
 
+                    if(isChecked){
+                        servicioRele.putExtra("RELE","ON");
+                    }else{
+                        servicioRele.putExtra("RELE","OFF");
+                    }
+                startService(servicioRele);
             }
+
+
         };
     }
 
@@ -110,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
             String scanContent = scanningResult.getContents();
 
             if(isValido(scanContent)){
-
+                scanContent=scanContent.replaceAll("\"","");
                 scanContent = scanContent.substring(1, scanContent.length()-1);
                 String[] split = scanContent.split(":");
 
@@ -199,6 +228,10 @@ public class MainActivity extends AppCompatActivity {
 
         TbH.addTab(tab1); //añadimos los tabs ya programados
         TbH.addTab(tab2);
+    }
+
+    private void crearNotificacion(){
+
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

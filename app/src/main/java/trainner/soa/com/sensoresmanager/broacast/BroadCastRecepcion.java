@@ -18,6 +18,8 @@ public class BroadCastRecepcion extends BroadcastReceiver {
 
     private String DETENIDO = "DETENIDO";
 
+
+
     public BroadCastRecepcion() {
     }
     public BroadCastRecepcion(MainActivity mainActivity ) {
@@ -37,6 +39,11 @@ public class BroadCastRecepcion extends BroadcastReceiver {
 
     }
 
+    /**
+     * METODO QUE RECIBE LOS DATOS DEL SERVICIO Y SE LOS PASA A LA PANTALLA
+     *
+     * @param intent
+     */
     private void notificarConectado(Intent intent) {
 
         mainActivity.getTxtEstado().setText(CONECTADO);
@@ -46,20 +53,10 @@ public class BroadCastRecepcion extends BroadcastReceiver {
         String humo = intent.getStringExtra(ServicioConsulta.HUMO);
         String corte = intent.getStringExtra(ServicioConsulta.CORTE);
         String temperatura = intent.getStringExtra(ServicioConsulta.TEMPERATURA);
-        mainActivity.getVentilador().setEnabled(Boolean.TRUE);
-        if("SI".equals(ventilador)){
-            mainActivity.getVentilador().setChecked(Boolean.TRUE);
-        }else if("NO".equals(ventilador)){
-            mainActivity.getVentilador().setChecked(Boolean.FALSE);
-        }
-        if(humedad != null && humedad.length() > 0){
-            mainActivity.getTxtHumedad().setText(humedad.concat("%"));
-        }
-        if(temperatura != null && temperatura.length() > 0){
-            mainActivity.getTxtTemperatura().setText(temperatura.concat("°"));
-        }
-        mainActivity.getTxtHumo().setText(humo);
-        mainActivity.getTxtCorte().setText(corte);
+        String host = intent.getStringExtra(ServicioConsulta.HOST2);
+        String puerto = intent.getStringExtra(ServicioConsulta.PUERTO2);
+        mainActivity.actualizarPantalla(ventilador, humedad, humo, corte, temperatura, host, puerto);
+
 
     }
     private void notificarDesconectado(Intent intent) {
@@ -70,6 +67,7 @@ public class BroadCastRecepcion extends BroadcastReceiver {
     private void notificarDetenido(Intent intent) {
         mainActivity.getTxtEstado().setText(DETENIDO);
         mainActivity.getLblSigoConectado().setText(DETENIDO);
+        mainActivity.hacerTiempo = Boolean.FALSE;
         clearCampo();
     }
 

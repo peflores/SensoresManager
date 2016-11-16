@@ -1,6 +1,8 @@
 package trainner.soa.com.sensoresmanager.service;
 
+import android.app.NotificationManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.NonNull;
@@ -34,6 +36,8 @@ public class ServicioConsulta extends Service {
     public static final String CORTE = "CORTE";
     public static final String HUMO = "HUMO";
     public static final String VENTILADOR = "VENTILADOR";
+    public static final String HOST2 = "trainner.soa.com.sensoresmanager.service.action.HOST";
+    public static final String PUERTO2 = "trainner.soa.com.sensoresmanager.service.action.PUERTO";
     private Thread hilo;
     private Boolean continuar = Boolean.TRUE;
     private StringBuilder url;
@@ -42,7 +46,8 @@ public class ServicioConsulta extends Service {
     private String PUERTO = "PUERTO";
     private String HTTP = "http://";
     private String DOSPUNTOS = ":";
-
+    private String hos;
+    private String puerto;
     public ServicioConsulta() {
 
 
@@ -54,18 +59,18 @@ public class ServicioConsulta extends Service {
         continuar = Boolean.FALSE;
         Log.i("MENSAJE", "LLAMO AL DESTROID");
 
-
             try {
-                hilo.join();
+                Intent brcEstado = new Intent();
+                brcEstado.setAction(ACTION_DETENIDO);
+                sendBroadcast(brcEstado);
+
+                hilo.join(1000);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
-        Intent brcEstado = new Intent();
-        brcEstado.setAction(ACTION_DETENIDO);
-        sendBroadcast(brcEstado);
-        hacerTiempo();
+
         super.onDestroy();
     }
 
@@ -87,8 +92,8 @@ public class ServicioConsulta extends Service {
             @Override
             public void run() {
                 if(intent != null){
-                    String hos = intent.getStringExtra(HOST);
-                    String puerto = intent.getStringExtra(PUERTO);
+                    hos = intent.getStringExtra(HOST);
+                    puerto = intent.getStringExtra(PUERTO);
                     url.append(hos).append(DOSPUNTOS).append(puerto).append("/SoaRest/");
                     srvArduino = new Retrofit.Builder().baseUrl(url.toString())
                             .addConverterFactory(GsonConverterFactory.create() ).build();
@@ -114,7 +119,11 @@ public class ServicioConsulta extends Service {
                 if (codigo == 200){
                     Arduino arduino = response.body();
                     //envio de broadCast para avisar que esta conectado.
+                    //Armo los parametros para enviar a la pantalla.
                     Intent brcEstado = new Intent();
+
+                    brcEstado.putExtra(HOST2, hos);
+                    brcEstado.putExtra(PUERTO2,puerto);
                     brcEstado.setAction(ACTION_CONECTADO);
                     brcEstado.putExtra(HUMO, arduino.getHumo());
                     brcEstado.putExtra(HUMEDAD, arduino.getHumedad());
@@ -147,7 +156,7 @@ public class ServicioConsulta extends Service {
 
     private void hacerTiempo(){
         try {
-            Thread.sleep(900);
+            Thread.sleep(1000);
         }catch (InterruptedException e){
 
         }

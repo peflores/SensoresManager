@@ -2,12 +2,24 @@ package trainner.soa.com.sensoresmanager;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -37,9 +49,9 @@ import trainner.soa.com.sensoresmanager.entidad.Arduino;
 import trainner.soa.com.sensoresmanager.inteface.ClienteService;
 import trainner.soa.com.sensoresmanager.service.ServicioConsulta;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SensorEventListener {
 
-
+    private static final int NOTIF_ALERTA_ID = 1;
     private TabHost TbH;
     private Button empezar;
     private Button detener;
@@ -58,8 +70,22 @@ public class MainActivity extends AppCompatActivity {
     private EditText txtHumo;
     private EditText txtTemperatura;
     private EditText txtCorte;
-
-
+    private Bitmap largeIcon;
+    private NotificationCompat.Builder mBuilder;
+    private Intent notIntent;
+    private  PendingIntent contIntent;
+    private Sensor acelerometro;
+    private Float cordenadaX;
+    private Float cordenadaY;
+    private Float cordenadaZ;
+    private long ultimaActualizacion;
+    private Float ultimoX;
+    private Float ultimoY;
+    private Float ultimoZ;
+    private static final int SE_AGITO = 500;
+    private SensorManager mSensorManager;
+    public Boolean hacerTiempo = Boolean.FALSE;
+    private static Boolean CONTINUAR_NOTIFICACION = Boolean.TRUE;
     public TextView getLblSigoConectado() {
         return lblSigoConectado;
     }
@@ -74,6 +100,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         inicializarComponentes();
         crearTabs();
+
+        largeIcon = BitmapFactory.decodeResource(getResources(), android.R.drawable.ic_dialog_alert);
+        mBuilder = new NotificationCompat.Builder(MainActivity.this)
+                        .setSmallIcon(android.R.drawable.stat_sys_warning)
+                        .setLargeIcon(largeIcon)
+                        .setContentTitle("Se Corto la Luz")
+                        .setContentText("App Monitoreo de Luz")
+                        .setTicker("Alerta!")
+                .setVibrate(new long[]{100, 250, 100, 500});
+        Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        mBuilder.setSound(defaultSound);
+        notIntent = new Intent(MainActivity.this, MainActivity.class);
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        acelerometro = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+
+
     }
     private void inicializarComponentes() {
 
@@ -98,6 +140,13 @@ public class MainActivity extends AppCompatActivity {
         scanQR.setOnClickListener(getListeneScanQR(scan));
         ventilador.setOnCheckedChangeListener(getListenerCheckedChanged());
         regsitrarFiltros();
+        cordenadaX = new Float(0);
+        cordenadaY = new Float(0);
+        cordenadaZ = new Float(0);
+        ultimoX = new Float(0);
+        ultimoY = new Float(0);
+        ultimoZ = new Float(0);
+
     }
 
     @NonNull
@@ -110,9 +159,12 @@ public class MainActivity extends AppCompatActivity {
 
                     if(isChecked){
                         servicioRele.putExtra("RELE","ON");
+                        buttonView.setChecked(Boolean.TRUE);
                     }else{
                         servicioRele.putExtra("RELE","OFF");
+                        buttonView.setChecked(Boolean.FALSE);
                     }
+                hacerTiempo = Boolean.FALSE;
                 startService(servicioRele);
             }
 
@@ -130,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    //Acá obtenemos los datos del servicio QR
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         //Se obtiene el resultado del proceso de scaneo y se parsea
         IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
@@ -191,20 +244,33 @@ public class MainActivity extends AppCompatActivity {
         };
     }
 
+    /**
+     * ACÁ SE INICIA EL SERVICION, ES EL LISTERNER DEL BOTONO EMPEZAR
+     * @return
+     */
     @NonNull
     private View.OnClickListener getListerner() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(isCamposValidos()){
-                    servicio.putExtra(HOST,txtDirIp.getText().toString());
+                    //asociamos la notificacion
+                    contIntent = PendingIntent.getActivity( MainActivity.this, 0, notIntent, 0);
+                    //PASAMOS PARAMETRO AL SERVICIO DE CONSULTA.
+                    mBuilder.setContentIntent(contIntent);
+                    servicio.putExtra(HOST, txtDirIp.getText().toString());
                     servicio.putExtra(PUERTO, txtPuerto.getText().toString());
+                    activarSensor();
                     startService(servicio);
 
                 }
 
             }
         };
+    }
+
+    private void activarSensor(){
+        mSensorManager.registerListener(this, acelerometro, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     private boolean isCamposValidos() {
@@ -230,7 +296,13 @@ public class MainActivity extends AppCompatActivity {
         TbH.addTab(tab2);
     }
 
-    private void crearNotificacion(){
+    public void enviarNotificacion(){
+
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.notify(NOTIF_ALERTA_ID, mBuilder.build());
 
     }
     @Override
@@ -240,6 +312,8 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -248,6 +322,7 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
+
         /*if (id == R.id.action_settings) {
             return true;
         }
@@ -374,5 +449,76 @@ public class MainActivity extends AppCompatActivity {
 
     public void setTxtCorte(EditText txtCorte) {
         this.txtCorte = txtCorte;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            long actualActualizacion = System.currentTimeMillis();
+            // only allow one update every 100ms.
+            if ((actualActualizacion - ultimaActualizacion) > 200) {
+                long diffTime = (actualActualizacion - ultimaActualizacion);
+                ultimaActualizacion = actualActualizacion;
+                cordenadaX = event.values[0] ;
+                cordenadaY = event.values[1];
+                cordenadaZ = event.values[2];
+
+            double movimiento = Math.abs(cordenadaX + cordenadaY + cordenadaZ - ultimoX - ultimoY - ultimoZ) / diffTime * 10000;
+                if(movimiento >  SE_AGITO){
+                    agitar();
+                }
+                ultimoX = cordenadaX;
+                ultimoY = cordenadaY;
+                ultimoZ = cordenadaZ;
+            }
+        }
+    }
+
+    private void agitar(){
+        getVentilador().setEnabled(Boolean.TRUE);
+        hacerTiempo = Boolean.FALSE;
+        ventilador.toggle();
+
+    }
+
+    public void actualizarPantalla(String ventilador,String humedad,String humo,String corte,String temperatura, String host, String puerto){
+        if(hacerTiempo){
+
+            if("NO".equalsIgnoreCase(corte) && CONTINUAR_NOTIFICACION){
+                CONTINUAR_NOTIFICACION = Boolean.FALSE;
+                enviarNotificacion();
+            }
+            getTxtDirIp().setText(host);
+            getTxtPuerto().setText(puerto);
+            getVentilador().setEnabled(Boolean.TRUE);
+            if("SI".equalsIgnoreCase(ventilador)){
+                getVentilador().setChecked(Boolean.TRUE);
+
+            }else if("NO".equalsIgnoreCase(ventilador)){
+                getVentilador().setChecked(Boolean.FALSE);
+            }
+            if(humedad != null && humedad.length() > 0){
+                getTxtHumedad().setText(humedad.concat("%"));
+            }
+            if(temperatura != null && temperatura.length() > 0){
+                getTxtTemperatura().setText(temperatura.concat("°"));
+            }
+            getTxtHumo().setText(humo);
+            getTxtCorte().setText(corte);
+
+        }
+        hacerTiempo = Boolean.TRUE;
+    }
+    private void hacerTiempo(){
+        try {
+            Thread.sleep(1500);
+        }catch (InterruptedException e){
+
+        }
+    }
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

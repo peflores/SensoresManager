@@ -164,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         return new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
                 servicioRele.putExtra(HOST,txtDirIp.getText().toString());
                 servicioRele.putExtra(PUERTO, txtPuerto.getText().toString());
 

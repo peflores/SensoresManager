@@ -10,8 +10,10 @@ import trainner.soa.com.sensoresmanager.entidad.Arduino;
  */
 public interface ClienteService {
 
-    @GET("test")
+       @GET("test")
     Call<Arduino> getEstado();
+
+
     @GET("rele")
     Call<Arduino> setRele(@Query("RELE") String rele);
 

@@ -94,6 +94,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.lblSigoConectado = lblSigoConectado;
     }
 
+    /**
+     * Metodo inicial,
+     *
+     * crea la pantalla principal y los componentes dentro de eso,
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,7 +115,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                         .setContentText("App Monitoreo de Luz")
                         .setTicker("Alerta!")
                 .setVibrate(new long[]{100, 250, 100, 500});
+
         Uri defaultSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+
         mBuilder.setSound(defaultSound);
         notIntent = new Intent(MainActivity.this, MainActivity.class);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -131,8 +139,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         txtCorte = (EditText) findViewById(R.id.txtVElectricidad);
         txtPuerto = (EditText) findViewById(R.id.txtPuerto);
         empezar.setOnClickListener(getListerner());
+
         servicio = new Intent(this, ServicioConsulta.class);
         servicioRele = new Intent(this,ServicioVentilador.class);
+
         lblSigoConectado = (TextView) findViewById(R.id.lblSigoConectado);
         detener = (Button) findViewById(R.id.btnDetener);
         detener.setOnClickListener(getListenerDetener());
@@ -258,8 +268,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                     contIntent = PendingIntent.getActivity( MainActivity.this, 0, notIntent, 0);
                     //PASAMOS PARAMETRO AL SERVICIO DE CONSULTA.
                     mBuilder.setContentIntent(contIntent);
+                    //pasamos parametros al servicio de consulta
                     servicio.putExtra(HOST, txtDirIp.getText().toString());
                     servicio.putExtra(PUERTO, txtPuerto.getText().toString());
+
                     activarSensor();
                     startService(servicio);
 
@@ -451,6 +463,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.txtCorte = txtCorte;
     }
 
+    /**
+     * Metodo que se ejecuta cada vez que ocurre un evento en el sensor.
+     * @param event
+     */
     @Override
     public void onSensorChanged(SensorEvent event) {
 

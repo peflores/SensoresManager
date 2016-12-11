@@ -74,6 +74,13 @@ public class ServicioConsulta extends Service {
         super.onDestroy();
     }
 
+    /**
+     * AC+A CREAMOS EL HILO PARA EJECUTAR LAS PETICIONES INDEFINIDAMENTE
+     * @param intent
+     * @param flags
+     * @param startId
+     * @return
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -92,11 +99,16 @@ public class ServicioConsulta extends Service {
             @Override
             public void run() {
                 if(intent != null){
+                    //obtenemos los paramatros que pasamos al servicio
                     hos = intent.getStringExtra(HOST);
                     puerto = intent.getStringExtra(PUERTO);
+
+                    //armamos la url de consulta
                     url.append(hos).append(DOSPUNTOS).append(puerto).append("/SoaRest/");
                     srvArduino = new Retrofit.Builder().baseUrl(url.toString())
                             .addConverterFactory(GsonConverterFactory.create() ).build();
+
+
                     ClienteService servicio =   srvArduino.create(ClienteService.class);
                     do {
                         Call<Arduino> estadoCallBack = servicio.getEstado();
